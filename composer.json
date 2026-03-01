@@ -1,0 +1,80 @@
+{
+    "name": "mczokajlo/sorted-linked-list",
+    "description": "A sorted linked list implementation in PHP",
+    "version": "0.1.0",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^13.0",
+        "rector/rector": "^2.3",
+        "rector/type-perfect": "^2.1",
+        "shipmonk/composer-dependency-analyser": "^1.8",
+        "shipmonk/dead-code-detector": "^0.14",
+        "shipmonk/phpstan-rules": "^4.3",
+        "spaze/phpstan-disallowed-calls": "^4.8",
+        "symplify/easy-coding-standard": "^13.0",
+        "symplify/phpstan-rules": "^14.9",
+        "tomasvotruba/cognitive-complexity": "^1.0",
+        "tomasvotruba/type-coverage": "^2.1",
+        "tomasvotruba/unused-public": "^2.2",
+        "veewee/composer-run-parallel": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mczokajlo\\SortedLinkedList\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mczokajlo\\SortedLinkedList\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "composer outdated --direct"
+        ],
+        "post-update-cmd": [
+            "composer outdated --direct"
+        ],
+
+        "php-parallel-lint": "@php vendor/bin/parallel-lint --no-progress --colors --show-deprecated src/ tests/",
+        "phpstan": "@php vendor/bin/phpstan analyse --no-progress --no-interaction",
+        "ecs": "@php vendor/bin/ecs check --no-progress-bar",
+        "ecs:fix": "@ecs --fix",
+        "rector": "@rector:fix --dry-run",
+        "rector:fix": "@php vendor/bin/rector process --no-progress-bar",
+        "dependency-analyser": "@php vendor/bin/composer-dependency-analyser",
+
+        "fix": [
+            "@rector:fix",
+            "@ecs:fix"
+        ],
+        "check": [
+            "@parallel php-parallel-lint rector ecs phpstan dependency-analyser"
+        ],
+        "test": "@php vendor/bin/phpunit",
+        "commit": [
+            "@fix",
+            "@parallel check test"
+        ]
+    },
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "veewee/composer-run-parallel": true
+        },
+        "optimize-autoloader": true,
+        "classmap-authoritative": false,
+        "sort-packages": true
+    }
+}
