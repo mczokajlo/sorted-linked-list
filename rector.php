@@ -3,11 +3,12 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 
 return RectorConfig::configure()
-    ->withSkip([PreferPHPUnitThisCallRector::class])
-    ->withPaths([__DIR__.'/src', __DIR__.'/tests'])
+    ->withSkip([PreferPHPUnitThisCallRector::class, RemoveNonExistingVarAnnotationRector::class])
+    ->withPaths([__DIR__ . '/src', __DIR__ . '/tests'])
     ->withPhpSets()
     ->withPreparedSets(
         deadCode: true,
