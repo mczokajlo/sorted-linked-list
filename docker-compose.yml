@@ -1,0 +1,8 @@
+services:
+  php:
+    build: .
+    volumes:
+      - .:/app
+    command: php -i
+    environment:
+      XDEBUG_MODE: coverage
