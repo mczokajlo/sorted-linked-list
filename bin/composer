@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Detect if running inside Docker container
+if [ -f /.dockerenv ]; then
+    # Inside container - run composer directly
+    exec composer "$@"
+else
+    # Outside container - use docker compose
+    exec docker compose run --rm -T php composer "$@"
+fi
