@@ -8,12 +8,11 @@ use Mczokajlo\SortedLinkedList\Exception\TypeMismatchException;
 use Mczokajlo\SortedLinkedList\Node;
 use Mczokajlo\SortedLinkedList\SortedLinkedList;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(SortedLinkedList::class)]
 #[CoversClass(TypeMismatchException::class)]
-#[UsesClass(Node::class)]
+#[CoversClass(Node::class)]
 final class InsertTest extends TestCase
 {
     public function testInsert(): void
