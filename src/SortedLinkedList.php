@@ -50,32 +50,21 @@ final class SortedLinkedList implements SortedLinkedListInterface
         return $this;
     }
 
-    private function validateType(mixed $value): void
-    {
-        if (! $this->type->supports($value)) {
-            throw TypeMismatchException::create(type: gettype($value));
-        }
-    }
-
-    /**
-     * @param Node<TValue> $start
-     * @param Node<TValue> $newNode
-     * @param TValue $value
-     */
-    private function insertAfter(Node $start, Node $newNode, mixed $value): void
-    {
-        $current = $start;
-        while ($current->next instanceof Node && ! $this->comesBefore($value, $current->next->value)) {
-            $current = $current->next;
-        }
-
-        $newNode->next = $current->next;
-        $current->next = $newNode;
-    }
-
     public function remove(mixed $value): bool
     {
-        return false;
+        $this->validateType($value);
+
+        if (! $this->node instanceof Node) {
+            return false;
+        }
+
+        if ($this->equals($value, $this->node->value)) {
+            $this->node = $this->node->next;
+
+            return true;
+        }
+
+        return $this->removeAfter($this->node, $value);
     }
 
     public function first(): mixed
@@ -89,7 +78,7 @@ final class SortedLinkedList implements SortedLinkedListInterface
 
     public function isEmpty(): bool
     {
-        return true;
+        return ! $this->node instanceof Node;
     }
 
     /**
@@ -115,5 +104,57 @@ final class SortedLinkedList implements SortedLinkedListInterface
     private function comesBefore(mixed $newValue, mixed $existingValue): bool
     {
         return $this->type->compareValues($newValue, $existingValue) <= 0;
+    }
+
+    /**
+     * @param TValue $newValue
+     * @param TValue $existingValue
+     */
+    private function equals(mixed $newValue, mixed $existingValue): bool
+    {
+        return $this->type->compareValues($newValue, $existingValue) === 0;
+    }
+
+    private function validateType(mixed $value): void
+    {
+        if (! $this->type->supports($value)) {
+            throw TypeMismatchException::create(type: gettype($value));
+        }
+    }
+
+    /**
+     * @param Node<TValue> $node
+     * @param TValue $value
+     */
+    private function removeAfter(Node $node, mixed $value): bool
+    {
+        $current = $node;
+        while ($current->next instanceof Node) {
+            if ($this->equals($value, $current->next->value)) {
+                $current->next = $current->next->next;
+
+                return true;
+            }
+
+            $current = $current->next;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Node<TValue> $start
+     * @param Node<TValue> $newNode
+     * @param TValue $value
+     */
+    private function insertAfter(Node $start, Node $newNode, mixed $value): void
+    {
+        $current = $start;
+        while ($current->next instanceof Node && ! $this->comesBefore($value, $current->next->value)) {
+            $current = $current->next;
+        }
+
+        $newNode->next = $current->next;
+        $current->next = $newNode;
     }
 }
