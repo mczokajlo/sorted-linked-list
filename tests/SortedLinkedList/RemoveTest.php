@@ -90,6 +90,36 @@ final class RemoveTest extends TestCase
         self::assertSame([5, 7], iterator_to_array($sortedLinkedList->getIterator(), true));
     }
 
+    public function testRemoveNonExistentValue(): void
+    {
+        /** @Given */
+        $sortedLinkedList = new SortedLinkedList(type: new TestType());
+        $sortedLinkedList->insert(5);
+        $sortedLinkedList->insert(7);
+        $sortedLinkedList->insert(9);
+
+        /** @When */
+        $result = $sortedLinkedList->remove(11);
+
+        /** Then */
+        self::assertFalse($result);
+        self::assertSame([5, 7, 9], iterator_to_array($sortedLinkedList->getIterator(), true));
+    }
+
+    public function testRemoveNonExistentFromSingleElementList(): void
+    {
+        /** @Given */
+        $sortedLinkedList = new SortedLinkedList(type: new TestType());
+        $sortedLinkedList->insert(5);
+
+        /** @When */
+        $result = $sortedLinkedList->remove(11);
+
+        /** Then */
+        self::assertFalse($result);
+        self::assertSame([5], iterator_to_array($sortedLinkedList->getIterator(), true));
+    }
+
     public function testRemoveAllValues(): void
     {
         /** @Given */

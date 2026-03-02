@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(StringType::class)]
+#[CoversClass(Direction::class)]
 final class StringTypeTest extends TestCase
 {
     #[DataProvider('compareDataProvide')]
@@ -37,6 +38,7 @@ final class StringTypeTest extends TestCase
             'value2' => 'a',
             'expected' => 0,
         ];
+
         yield '"a" = "a" DESC' => [
             'direction' => Direction::DESC,
             'value1' => 'a',
@@ -50,6 +52,7 @@ final class StringTypeTest extends TestCase
             'value2' => 'a',
             'expected' => 1,
         ];
+
         yield '"b" < "a" DESC' => [
             'direction' => Direction::DESC,
             'value1' => 'b',
@@ -63,6 +66,7 @@ final class StringTypeTest extends TestCase
             'value2' => 'b',
             'expected' => -1,
         ];
+
         yield '"a" > "b" DESC' => [
             'direction' => Direction::DESC,
             'value1' => 'a',
@@ -76,6 +80,7 @@ final class StringTypeTest extends TestCase
             'value2' => '',
             'expected' => 0,
         ];
+
         yield '"" < "a" ASC' => [
             'direction' => Direction::ASC,
             'value1' => '',
@@ -89,6 +94,7 @@ final class StringTypeTest extends TestCase
             'value2' => str_repeat('a', 1000),
             'expected' => 1,
         ];
+
         yield 'long string comparison DESC' => [
             'direction' => Direction::DESC,
             'value1' => str_repeat('z', 1000),
@@ -130,18 +136,23 @@ final class StringTypeTest extends TestCase
         yield 'int' => [
             'value' => 1,
         ];
+
         yield 'float' => [
             'value' => 1.1,
         ];
+
         yield 'array' => [
             'value' => [],
         ];
+
         yield 'object' => [
             'value' => new \stdClass(),
         ];
+
         yield 'null' => [
             'value' => null,
         ];
+
         yield 'bool' => [
             'value' => true,
         ];

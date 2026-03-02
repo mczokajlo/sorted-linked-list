@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(IntegerType::class)]
+#[CoversClass(Direction::class)]
 final class IntegerTypeTest extends TestCase
 {
     #[DataProvider('compareDataProvide')]
@@ -37,6 +38,7 @@ final class IntegerTypeTest extends TestCase
             'value2' => 0,
             'expected' => 0,
         ];
+
         yield '0 = 0 DESC' => [
             'direction' => Direction::DESC,
             'value1' => 0,
@@ -50,6 +52,7 @@ final class IntegerTypeTest extends TestCase
             'value2' => -1,
             'expected' => 1,
         ];
+
         yield '1 < -1 DESC' => [
             'direction' => Direction::DESC,
             'value1' => 1,
@@ -63,6 +66,7 @@ final class IntegerTypeTest extends TestCase
             'value2' => 1,
             'expected' => -1,
         ];
+
         yield '-1 > 1 DESC' => [
             'direction' => Direction::DESC,
             'value1' => -1,
@@ -76,6 +80,7 @@ final class IntegerTypeTest extends TestCase
             'value2' => -PHP_INT_MAX,
             'expected' => 1,
         ];
+
         yield 'PHP_INT_MAX < -PHP_INT_MAX DESC' => [
             'direction' => Direction::DESC,
             'value1' => PHP_INT_MAX,
@@ -117,18 +122,23 @@ final class IntegerTypeTest extends TestCase
         yield 'float' => [
             'value' => 1.1,
         ];
+
         yield 'string' => [
             'value' => '1',
         ];
+
         yield 'array' => [
             'value' => [],
         ];
+
         yield 'object' => [
             'value' => new \stdClass(),
         ];
+
         yield 'null' => [
             'value' => null,
         ];
+
         yield 'bool' => [
             'value' => true,
         ];
