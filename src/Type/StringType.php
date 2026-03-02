@@ -20,10 +20,11 @@ final readonly class StringType implements TypeInterface
     {
         $comparison = strcmp($left, $right);
 
-        return match ($this->direction) {
-            Direction::ASC => $comparison,
-            Direction::DESC => $comparison * -1,
-        };
+        if ($this->direction === Direction::DESC) {
+            return $comparison * -1;
+        }
+
+        return $comparison;
     }
 
     public function supports(mixed $value): bool

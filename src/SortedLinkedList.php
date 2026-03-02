@@ -38,7 +38,13 @@ final class SortedLinkedList implements SortedLinkedListInterface
         /** @var Node<TValue> $newNode */
         $newNode = new Node($value);
 
-        if (! $this->node instanceof Node || $this->comesBefore($value, $this->node->value)) {
+        if (! $this->node instanceof Node) {
+            $this->node = $newNode;
+
+            return $this;
+        }
+
+        if ($this->comesBefore($value, $this->node->value)) {
             $newNode->next = $this->node;
             $this->node = $newNode;
 
@@ -150,7 +156,11 @@ final class SortedLinkedList implements SortedLinkedListInterface
     private function insertAfter(Node $start, Node $newNode, mixed $value): void
     {
         $current = $start;
-        while ($current->next instanceof Node && ! $this->comesBefore($value, $current->next->value)) {
+        while ($current->next instanceof Node) {
+            if ($this->comesBefore($value, $current->next->value)) {
+                break;
+            }
+
             $current = $current->next;
         }
 
