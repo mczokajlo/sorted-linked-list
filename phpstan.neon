@@ -54,7 +54,13 @@ parameters:
     # shipmonk/phpstan-rules - all enabled by default via enableAllRules
     shipmonkRules:
         enableAllRules: true
+        enforceReadonlyPublicProperty:
+            enabled: false
 
     # phpstan/phpstan-strict-rules - all enabled by default
     strictRules:
         allRules: true
+
+    ignoreErrors:
+          -
+              identifier: symplify.explicitAbstractPrefixName

@@ -5,4 +5,4 @@ services:
       - .:/app
     command: php -i
     environment:
-      XDEBUG_MODE: coverage
+      XDEBUG_MODE: coverage,debug

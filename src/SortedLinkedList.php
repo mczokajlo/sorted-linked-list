@@ -5,57 +5,86 @@ declare(strict_types=1);
 namespace Mczokajlo\SortedLinkedList;
 
 use Mczokajlo\SortedLinkedList\Contract\SortedLinkedListInterface;
+use Mczokajlo\SortedLinkedList\Contract\TypeInterface;
+use Mczokajlo\SortedLinkedList\Exception\EmptyListException;
+use Mczokajlo\SortedLinkedList\Exception\TypeMismatchException;
 
 /**
  * @api
  *
  * @template TKey of int
- * @template TValue of int|string
+ * @template TValue
  *
  * @implements SortedLinkedListInterface<TKey, TValue>
  */
-final readonly class SortedLinkedList implements SortedLinkedListInterface
+final class SortedLinkedList implements SortedLinkedListInterface
 {
-    private function __construct(
-        public Type $type,
-        public Direction $direction = Direction::ASC,
+    /**
+     * @var Node<TValue>|null
+     */
+    private ?Node $node = null;
+
+    /**
+     * @param TypeInterface<TValue> $type
+     */
+    public function __construct(
+        private readonly TypeInterface $type,
     ) {}
 
-    /**
-     * @api
-     *
-     * @return self<TKey, int>
-     */
-    public static function ofIntegers(Direction $direction = Direction::ASC): self
+    public function insert(mixed $value): SortedLinkedListInterface
     {
-        /** @var self<TKey, int> */
-        return new self(type: Type::INTEGER, direction: $direction);
-    }
+        $this->validateType($value);
 
-    /**
-     * @api
-     *
-     * @return self<TKey, string>
-     */
-    public static function ofStrings(Direction $direction = Direction::ASC): self
-    {
-        /** @var self<TKey, string> */
-        return new self(type: Type::STRING, direction: $direction);
-    }
+        /** @var Node<TValue> $newNode */
+        $newNode = new Node($value);
 
-    public function insert(int|string $value): SortedLinkedListInterface
-    {
+        if (! $this->node instanceof Node || $this->comesBefore($value, $this->node->value)) {
+            $newNode->next = $this->node;
+            $this->node = $newNode;
+
+            return $this;
+        }
+
+        $this->insertAfter($this->node, $newNode, $value);
+
         return $this;
     }
 
-    public function remove(int|string $value): bool
+    private function validateType(mixed $value): void
+    {
+        if (! $this->type->supports($value)) {
+            throw TypeMismatchException::create(type: gettype($value));
+        }
+    }
+
+    /**
+     * @param Node<TValue> $start
+     * @param Node<TValue> $newNode
+     * @param TValue $value
+     */
+    private function insertAfter(Node $start, Node $newNode, mixed $value): void
+    {
+        $current = $start;
+        while ($current->next instanceof Node && ! $this->comesBefore($value, $current->next->value)) {
+            $current = $current->next;
+        }
+
+        $newNode->next = $current->next;
+        $current->next = $newNode;
+    }
+
+    public function remove(mixed $value): bool
     {
         return false;
     }
 
-    public function first(): int|string
+    public function first(): mixed
     {
-        throw new \UnderflowException('List is empty');
+        if ($this->node instanceof Node) {
+            return $this->node->value;
+        }
+
+        throw EmptyListException::create(method: 'first');
     }
 
     public function isEmpty(): bool
@@ -63,8 +92,28 @@ final readonly class SortedLinkedList implements SortedLinkedListInterface
         return true;
     }
 
-    public function getIterator(): \Traversable
+    /**
+     * @return \Generator<TKey, TValue>
+     */
+    public function getIterator(): \Generator
     {
-        return new \EmptyIterator();
+        $current = $this->node;
+        $index = 0;
+
+        while ($current instanceof Node) {
+            /** @var TKey $index */
+            yield $index => $current->value;
+            $current = $current->next;
+            ++$index;
+        }
+    }
+
+    /**
+     * @param TValue $newValue
+     * @param TValue $existingValue
+     */
+    private function comesBefore(mixed $newValue, mixed $existingValue): bool
+    {
+        return $this->type->compareValues($newValue, $existingValue) <= 0;
     }
 }
