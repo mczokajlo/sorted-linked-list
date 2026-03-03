@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mczokajlo\SortedLinkedList\Type;
 
+/**
+ * @api
+ */
 enum Direction
 {
     case ASC;
