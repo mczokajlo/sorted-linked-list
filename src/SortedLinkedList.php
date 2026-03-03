@@ -79,7 +79,7 @@ final class SortedLinkedList implements SortedLinkedListInterface
             return $this->node->value;
         }
 
-        throw EmptyListException::create(method: 'first');
+        throw EmptyListException::create(method: __FUNCTION__);
     }
 
     public function isEmpty(): bool
@@ -123,7 +123,7 @@ final class SortedLinkedList implements SortedLinkedListInterface
     private function validateType(mixed $value): void
     {
         if (! $this->type->supports($value)) {
-            throw TypeMismatchException::create(type: gettype($value));
+            throw TypeMismatchException::create(expectedType: $this->type::class, actualType: gettype($value));
         }
     }
 

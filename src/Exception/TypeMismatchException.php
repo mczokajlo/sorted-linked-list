@@ -6,8 +6,8 @@ namespace Mczokajlo\SortedLinkedList\Exception;
 
 final class TypeMismatchException extends SortedLinkedListException
 {
-    public static function create(string $type): self
+    public static function create(string $expectedType, string $actualType): self
     {
-        return new self(\sprintf('Invalid type %s given', $type));
+        return new self(\sprintf('Expected value of type %s, got %s', $expectedType, $actualType));
     }
 }
