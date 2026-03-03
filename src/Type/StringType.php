@@ -7,8 +7,9 @@ namespace Mczokajlo\SortedLinkedList\Type;
 use Mczokajlo\SortedLinkedList\Contract\TypeInterface;
 
 /**
- * @template TValue of string
- * @implements TypeInterface<TValue>
+ * @api
+ *
+ * @implements TypeInterface<string>
  */
 final readonly class StringType implements TypeInterface
 {

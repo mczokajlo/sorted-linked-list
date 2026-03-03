@@ -9,17 +9,16 @@ use IteratorAggregate;
 /**
  * @api
  *
- * @template TKey of int
  * @template TValue
  *
- * @template-extends IteratorAggregate<TKey, TValue>
+ * @template-extends IteratorAggregate<int, TValue>
  */
 interface SortedLinkedListInterface extends IteratorAggregate
 {
     /**
      * @param TValue $value
      *
-     * @return self<TKey, TValue>
+     * @return self<TValue>
      */
     public function insert(mixed $value): self;
 

@@ -7,8 +7,9 @@ namespace Mczokajlo\SortedLinkedList\Type;
 use Mczokajlo\SortedLinkedList\Contract\TypeInterface;
 
 /**
- * @template TValue of int
- * @implements TypeInterface<TValue>
+ * @api
+ *
+ * @implements TypeInterface<int>
  */
 final readonly class IntegerType implements TypeInterface
 {

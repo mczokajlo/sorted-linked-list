@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mczokajlo\SortedLinkedList;
 
+use Generator;
 use Mczokajlo\SortedLinkedList\Contract\SortedLinkedListInterface;
 use Mczokajlo\SortedLinkedList\Contract\TypeInterface;
 use Mczokajlo\SortedLinkedList\Exception\EmptyListException;
@@ -12,10 +13,9 @@ use Mczokajlo\SortedLinkedList\Exception\TypeMismatchException;
 /**
  * @api
  *
- * @template TKey of int
  * @template TValue
  *
- * @implements SortedLinkedListInterface<TKey, TValue>
+ * @implements SortedLinkedListInterface<TValue>
  */
 final class SortedLinkedList implements SortedLinkedListInterface
 {
@@ -88,15 +88,14 @@ final class SortedLinkedList implements SortedLinkedListInterface
     }
 
     /**
-     * @return \Generator<TKey, TValue>
+     * @return Generator<int, TValue>
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         $current = $this->node;
         $index = 0;
 
         while ($current instanceof Node) {
-            /** @var TKey $index */
             yield $index => $current->value;
             $current = $current->next;
             ++$index;
