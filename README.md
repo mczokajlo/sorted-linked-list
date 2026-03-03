@@ -101,6 +101,33 @@ final readonly class FloatType implements TypeInterface
 }
 ```
 
+## Type Safety
+
+This library provides two layers of type safety: static analysis via PHPStan generics and runtime validation.
+
+### Generics via PHPStan
+
+The `@template TValue` annotations on `TypeInterface` and `SortedLinkedList` enable full generic type checking. When you create a list with `IntegerType`, PHPStan infers it as `SortedLinkedList<int>` and catches type errors at analysis time:
+
+```php
+$list = new SortedLinkedList(new IntegerType(Direction::ASC));
+$list->insert('not an integer'); // PHPStan error: Parameter #1 $value expects int, string given
+```
+
+This project enforces PHPStan level max with 100% type coverage.
+
+### Runtime validation
+
+If PHPStan is not used (or a type error slips through `mixed`), the list throws `TypeMismatchException` at runtime when a value fails the `supports()` check.
+
+### Recommended setup for consumers
+
+Install PHPStan in your project to get full generic type checking:
+
+```bash
+composer require --dev phpstan/phpstan
+```
+
 ## API Reference
 
 ### `SortedLinkedList`

@@ -28,6 +28,9 @@
         "tomasvotruba/unused-public": "^2.2",
         "veewee/composer-run-parallel": "^1.5"
     },
+    "suggest": {
+        "phpstan/phpstan": "For static analysis with full generic type support"
+    },
     "autoload": {
         "psr-4": {
             "Mczokajlo\\SortedLinkedList\\": "src/"
