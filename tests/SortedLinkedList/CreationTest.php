@@ -36,7 +36,7 @@ final class CreationTest extends TestCase
         self::assertSame([], $result);
     }
 
-    public function testNewListHaseNoHead(): void
+    public function testNewListHasNoHead(): void
     {
         /** @Given */
         $sortedLinkedList = new SortedLinkedList(type: new TestType());

@@ -32,8 +32,9 @@ final class RemoveTest extends TestCase
         /** @Given */
         $sortedLinkedList = new SortedLinkedList(type: new TestType());
 
-        /** Then */
+        /** @Then */
         $this->expectException(TypeMismatchException::class);
+        $this->expectExceptionMessage('Expected value of type');
 
         /** @When */
         $sortedLinkedList->remove('5'); // @phpstan-ignore argument.type (testing runtime type validation)
@@ -133,8 +134,38 @@ final class RemoveTest extends TestCase
         $sortedLinkedList->remove(7);
         $sortedLinkedList->remove(9);
 
-        /** Then */
+        /** @Then */
         self::assertTrue($sortedLinkedList->isEmpty());
         self::assertSame([], iterator_to_array($sortedLinkedList->getIterator(), true));
+    }
+
+    public function testRemoveOnlyFirstOccurrenceOfDuplicate(): void
+    {
+        /** @Given */
+        $sortedLinkedList = new SortedLinkedList(type: new TestType());
+        $sortedLinkedList->insert(5);
+        $sortedLinkedList->insert(5);
+        $sortedLinkedList->insert(5);
+
+        /** @When */
+        $result = $sortedLinkedList->remove(5);
+
+        /** @Then */
+        self::assertTrue($result);
+        self::assertSame([5, 5], iterator_to_array($sortedLinkedList->getIterator(), true));
+    }
+
+    public function testRemoveSoleElementMakesListEmpty(): void
+    {
+        /** @Given */
+        $sortedLinkedList = new SortedLinkedList(type: new TestType());
+        $sortedLinkedList->insert(5);
+
+        /** @When */
+        $result = $sortedLinkedList->remove(5);
+
+        /** @Then */
+        self::assertTrue($result);
+        self::assertTrue($sortedLinkedList->isEmpty());
     }
 }

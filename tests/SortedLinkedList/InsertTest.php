@@ -79,6 +79,7 @@ final class InsertTest extends TestCase
 
         /** @Then */
         $this->expectException(TypeMismatchException::class);
+        $this->expectExceptionMessage('Expected value of type');
 
         /** @When */
         $sortedLinkedList->insert('7'); // @phpstan-ignore argument.type (testing runtime type validation)
@@ -94,5 +95,34 @@ final class InsertTest extends TestCase
 
         /* @Then */
         self::assertFalse($sortedLinkedList->isEmpty());
+    }
+
+    public function testInsertAtEndAfterTraversal(): void
+    {
+        /** @Given */
+        $sortedLinkedList = new SortedLinkedList(type: new TestType());
+        $sortedLinkedList->insert(3);
+        $sortedLinkedList->insert(5);
+
+        /** @When */
+        $sortedLinkedList->insert(10);
+
+        /** @Then */
+        self::assertSame([3, 5, 10], iterator_to_array($sortedLinkedList->getIterator(), true));
+    }
+
+    public function testInsertDuplicateValues(): void
+    {
+        /** @Given */
+        $sortedLinkedList = new SortedLinkedList(type: new TestType());
+
+        /** @When */
+        $sortedLinkedList->insert(5);
+        $sortedLinkedList->insert(3);
+        $sortedLinkedList->insert(5);
+        $sortedLinkedList->insert(5);
+
+        /** @Then */
+        self::assertSame([3, 5, 5, 5], iterator_to_array($sortedLinkedList->getIterator(), true));
     }
 }
